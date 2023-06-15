@@ -5,25 +5,64 @@ const editButton=document.getElementById("edit");
 const addButton = document.getElementById("add");
 const resetButton = document.getElementById("reset");
 const status12=document.getElementById("status");
+const special=document.getElementById("special");
+const search=document.getElementById("search");
 
 resetButton.addEventListener("click", function(event) {
   event.preventDefault();
   editButton.style.display = "none";
   addButton.style.display = "block";
-  
-
   resetForm();
 });
 
-function resetForm() {
+
+//<---------Disable the Error Message once value is entered----------->
+// var rnd1= document.getElementById("activityname").value;
+// var rnd2= document.getElementById("StartDate").value;
+// var rnd3= document.getElementById("EndDate").value;
+// var rnd4= document.getElementById("status").value;
+// rnd1.addEventListener=('change',disablemessage);
+// rnd2.addEventListener=('change',disablemessage);
+// rnd3.addEventListener=('change',disablemessage);
+// rnd4.addEventListener=('change',disablemessage);
+
+
+// const disablemessage=()=>{
+//   var errorMessages = document.getElementsByClassName("errorMessage");
+//   for (var i = 0; i < errorMessages.length; i++) {
+//     errorMessages[i].textContent = "";
+//   }
+
+// }
+
+document.getElementById("activityname").addEventListener("input", clearErrorMessage);
+document.getElementById("StartDate").addEventListener("input", clearErrorMessage);
+document.getElementById("EndDate").addEventListener("input", clearErrorMessage);
+document.getElementById("status").addEventListener("input", clearErrorMessage);
+
+function clearErrorMessage(){
+  const errorMessages = document.getElementsByClassName("errorMessage");
+  for (let i = 0; i < errorMessages.length; i++) {
+    errorMessages[i].textContent = "";
+  }
+};
+
+
+const resetForm=()=> {
     document.getElementById("activityname").value = "";
     document.getElementById("StartDate").value = "";
     document.getElementById("EndDate").value = "";
     document.getElementById("status").value = "";
+
   
     var errorMessages = document.getElementsByClassName("errorMessage");
     for (var i = 0; i < errorMessages.length; i++) {
       errorMessages[i].textContent = "";
+    }
+
+    var options = status12.getElementsByTagName("option");
+    for (var i = 0; i < options.length; i++) {
+      options[i].disabled = false;
     }
   }
 
@@ -36,7 +75,7 @@ let todayDate = new Date();
 let startDate = new Date(startDateInput.value);
 let endDate = new Date(endDateInput.value);
 
-const started = status12.querySelector("option[value='Started']");
+const Started = status12.querySelector("option[value='Started']");
 const notStarted = status12.querySelector("option[value='Not-Started']");
 const inProgress = status12.querySelector("option[value='In-Progress']");
 const completed = status12.querySelector("option[value='Completed']");
@@ -47,19 +86,42 @@ startDate = getDate(startDate);
 endDate = getDate(endDate);
 console.log(todayDate,startDate,endDate);
 
- if (todayDate < endDate) {
-    started.disabled = true;
+if (startDate < todayDate && endDate < todayDate) {
+  Started.disabled = true;
+  notStarted.disabled = true;
+  inProgress.disabled = true;
+  completed.disabled = false;
+  duePassed.disabled = false;
+}
+
+else if (todayDate > endDate) {
+    Started.disabled = true;
     notStarted.disabled = true;
     inProgress.disabled = true;
     completed.disabled = true;
     duePassed.disabled = false;
-} else if (todayDate > endDate) {
-    started.disabled = false;
+} else if (todayDate < endDate) {
+    Started.disabled = false;
     notStarted.disabled = false;
     inProgress.disabled = false;
     completed.disabled = false;
     duePassed.disabled = true;
 }
+
+
+  if (startDate > endDate) {
+    addButton.style.display = "none";
+    special.textContent = "StartDate cannot be more than End Date";
+  }
+  // else {
+  //   addButton.style.display = "block";
+  //   special("special").textContent = "";
+
+  // }
+
+  // Perform actions when start date crosses end date
+
+  // You can display an error message or perform any other actions here
 }
 
 const getDate = (date) => {
@@ -117,7 +179,7 @@ addButton.addEventListener("click", (e) => {
   e.preventDefault();
 
   var activityname = document.getElementById("activityname").value;
-  var startDate = document.getElementById("StartDate").value;
+  var StartDate = document.getElementById("StartDate").value;
   var EndDate = document.getElementById("EndDate").value;
   var status = document.getElementById("status").value;
   var errorMessage = document.getElementsByClassName("errorMessage");
@@ -125,7 +187,7 @@ addButton.addEventListener("click", (e) => {
   function readFormData() {
     var formData = {};
     formData["activityname"] = activityname;
-    formData["StartDate"] = startDate;
+    formData["StartDate"] = StartDate;
     formData["EndDate"] = EndDate;
     formData["status"] = status;
     return formData;
@@ -138,11 +200,11 @@ addButton.addEventListener("click", (e) => {
 
 
 const insertNewRecord = (data,errorMessage) =>{
-  if(validate(data.activityname,data.startDate,data.EndDate,data.status,errorMessage)){
+  if(validate(data.activityname,data.StartDate,data.EndDate,data.status,errorMessage)){
     var task = {
 
         activityname: data.activityname,
-        startDate: data.startDate,
+        StartDate: data.StartDate,
         EndDate: data.EndDate,
         status: data.status
         };
@@ -150,30 +212,29 @@ const insertNewRecord = (data,errorMessage) =>{
     
        entries.push(task);
        updatetable();
+       resetForm();
 
     //    entries.sort(function(a, b) {
     //     return a.EndDate - b.EndDate;
     //   });
 
     }
-   else{
-        return false;
-    }  
+    
 
 }
 
-const validate = (activityName, startDate, endDate, status, errorMessage) => {
+const validate = (activityName, StartDate, EndDate, status, errorMessage) => {
     if (activityName === "") {
       errorMessage[0].innerHTML = "Activity Name is required";
       return false;
     }
   
-    if (startDate === "") {
+    if (StartDate === "") {
       errorMessage[1].innerHTML = "Start Date is required";
       return false;
     }
   
-    if (endDate === "") {
+    if (EndDate === "") {
       errorMessage[2].innerHTML = "End Date is required";
       return false;
     }
@@ -201,15 +262,21 @@ const validate = (activityName, startDate, endDate, status, errorMessage) => {
       var cell1 = newRow.insertCell(0);
       cell1.innerHTML = ent.activityname;
       var cell2 = newRow.insertCell(1);
-      cell2.innerHTML = ent.startDate;
+      cell2.innerHTML = ent.StartDate;
       var cell3 = newRow.insertCell(2);
       cell3.innerHTML = ent.EndDate;
       var cell4 = newRow.insertCell(3);
       cell4.innerHTML = ent.status;
       var cell5 = newRow.insertCell(4);
-      cell5.innerHTML = `<button class="edit" onclick="onEdit(this , ${index})">Edit</button> <button class="delete" onclick="onDelete(this)">Delete</button>`;
-  
+      cell5.innerHTML = `<button class="edit together" onclick="onEdit(this , ${index})">Edit</button> <button class="delete together" onclick="onDelete(this)">Delete</button>`;
+      if (ent.status === "Due-Passed") {
+        newRow.style.textDecoration = "line-through";
+        for (var i = 1; i < newRow.cells.length-1; i++) {
+          newRow.cells[i].style.textDecoration = "line-through";
+        }
+      }
     });
+    resetForm();
   }
 
 const onEdit= (button, index) => {
@@ -231,12 +298,14 @@ const onEdit= (button, index) => {
     document.getElementById("StartDate").value = StartDate;
     document.getElementById("EndDate").value = EndDate;
     document.getElementById("status").value = status;
+
+    dateProcessing();
   
     editButton.onclick = (e) => {
       e.preventDefault();
       
       entries[index].activityname = document.getElementById("activityname").value;
-      entries[index].startDate = document.getElementById("StartDate").value;
+      entries[index].StartDate = document.getElementById("StartDate").value;
       entries[index].EndDate = document.getElementById("EndDate").value;
       entries[index].status = document.getElementById("status").value;
 
@@ -249,6 +318,55 @@ const onEdit= (button, index) => {
     }
   }
 
+  const onDelete = (td) => {
+    row = td.parentElement.parentElement;
+    var index = row.rowIndex - 1;
+    entries.splice(index, 1);
+
+    document.getElementById("taskList").deleteRow(row.rowIndex);
+  }
+
+
+  //<------------------Search Based Filtering-------------------->
+
+  const err = document.getElementsByClassName('errorMessage123');
+
+  search.addEventListener("keyup", () => {
+    let filter = document.getElementById("search").value.toUpperCase();
+    let table = document.getElementById("taskList");
+    let tr = table.getElementsByTagName("tr");
+  
+    for (var i = 0; i < tr.length; i++) {
+      let foundMatch = false;
+      let tds = tr[i].getElementsByTagName("td");
+  
+      for (var j = 0; j < tds.length; j++) {
+        let td = tds[j];
+        let textValue = td.textContent || td.innerText;
+  
+        if (textValue.toUpperCase().indexOf(filter) > -1) {
+          foundMatch = true;
+          break;
+        }
+      }
+  
+      if (foundMatch) {
+        tr[i].style.display = ""; // Show the row
+        err.textContent = "Search is Available";
+      } else {
+        // Check if it is a table header row
+        let ths = tr[i].getElementsByTagName("th");
+        if (ths.length > 0) {
+          tr[i].style.display = ""; // Show the header row
+        } else {
+          tr[i].style.display = "none"; // Hide the data row
+        }
+        err.textContent = "No search found";
+      }
+    }
+  });
+  
+  
 
   
 

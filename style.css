@@ -55,6 +55,10 @@ body {
     cursor: pointer;
   }
 
+  #special{
+    margin-top: 0px;
+  }
+
   .table-container {
     display: flex;
     flex-direction: column;
@@ -69,6 +73,7 @@ body {
   }
 
   #taskList th {
+    font-weight: bolder;
     padding: 8px;
     text-align: left;
     border: 2px solid black;
@@ -78,7 +83,11 @@ body {
     border: 2px solid black;
     text-align: left;
     padding: 8px 15px;
-    color: black;
+    color: white;
+  }
+
+  tbody {
+    background-color:rgb(37, 37, 172) ;
   }
 
   #taskList th{
@@ -103,6 +112,33 @@ body {
   opacity: 0;
 }
 
+
+.together{
+  padding: 8px;
+  border: 2px solid black;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 5px;
+
+
+}
+
+.edit{
+  background-color: rgb(199, 192, 192);
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 2px 2px;
+}
+
+.delete{
+  background-color: red;
+  color: white;
+  margin-left: 2px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
 
   
 
@@ -141,6 +177,12 @@ body {
   }
 
   .errorMessage {
+    display: block;
+    color: #ff0000;
+    margin-top: 0;
+    margin-bottom: 4px;
+  }
+  .errorMessage123 {
     display: block;
     color: #ff0000;
     margin-top: 0;
