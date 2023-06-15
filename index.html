@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>ToDo_List</title>
+</head>
+<body>
+    <h1>TODO LIST </h1>
+    <form>
+      <label for="ActivityName">ActivityName:</label>
+      <input type="text" id="activityname" name="activityname" class="spacing" required><br>
+      <span class="errorMessage"></span> 
+      
+      <label for="date-input1">Start Date:</label>
+      <input type="date" id="StartDate" class="date-input" required><br>
+      <span class="errorMessage"></span>
+      
+      <label for="date-input">End Date:</label>
+      <input type="date" id="EndDate" class="date-input" required><br>
+      <span class="errorMessage"></span>
+      
+      <label for="Status">Status:</label>
+      <select id="status" name="status" class="spacing" required>
+        <option value="" disabled selected hidden>Select</option>
+        <option value="Started">Started</option>
+        <option value="Not-Started">Not-Started</option>
+        <option value="In-Progress">In-Progress</option>
+        <option value="Completed">Completed</option>
+        <option value="Due-Passed">Due-Passed</option>
+      </select><br>
+      <span class="errorMessage"></span>
+      
+      <div class="submit">
+        <input type="reset" id="reset" value="RESET">
+        <input type="submit" id="add" value="ADD">
+        <input type="submit" id="edit" value="EDIT">
+       </div>
+  
+    </form>
+    <div class="center">
+        <label for="Search">Search:</label>
+        <input type="text" id="search" required><br>
+        <span class="errorMessage"></span>
+    </div>
+
+    <div class="table-container">
+        <h2>List of Task</h2>
+        <td>
+          <table id="taskList">
+            <thead>
+              <tr>
+                <th>ActivityName</th>
+                <th>StartDate</th>
+                <th>EndDate</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr> 
+            </thead>
+      
+            <tbody> 
+      
+            </tbody>
+      
+          </table>
+        </td>  
+      </div>
+    <script src="index.js"></script>
+</body>
+</html>
