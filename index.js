@@ -47,9 +47,7 @@ startDate = getDate(startDate);
 endDate = getDate(endDate);
 console.log(todayDate,startDate,endDate);
 
-if (startDate < endDate && endDate) {
-    addButton.style.display = "none";
-} else if (todayDate < endDate) {
+ if (todayDate < endDate) {
     started.disabled = true;
     notStarted.disabled = true;
     inProgress.disabled = true;
